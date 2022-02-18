@@ -1,2 +1,2 @@
 # RoboCup_Junior_Material
-En este repositorio se agregarà todos los trucos
+We will be updating all the progress we make during our journey of learning and growing using this competition as an excuse :)
