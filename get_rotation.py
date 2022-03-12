@@ -13,7 +13,7 @@ R = supervisor.getSelf().getOrientation()
 # Checks if a matrix is a valid rotation matrix.
 def isRotationMatrix(R) :
     Rt = np.transpose(R)
-    shouldBeIdentity = np.dot(Rt, R)
+    shouldBeIdentity = np.dot(Rt, R.dtype)
     I = np.identity(3, dtype = R)
     n = np.linalg.norm(I - shouldBeIdentity)
     return n < 1e-6
