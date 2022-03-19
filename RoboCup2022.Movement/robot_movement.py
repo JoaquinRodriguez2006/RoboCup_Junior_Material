@@ -22,6 +22,10 @@ ruedaDerecha = robot.getDevice("wheel2 motor")
 ruedaIzquierda.setPosition(float('inf'))
 ruedaDerecha.setPosition(float('inf'))
 
+# Gyroscope
+gyro = robot.getDevice("gyro")
+gyro.enable(timeStep)
+
 # Functions
 def avanzar(vel):
     ruedaIzquierda.setVelocity(vel)
@@ -59,7 +63,7 @@ def rotar(angulo):
     print("Rotacion finalizada.")
     angulo_actual = 0
     return True
-    
+
 while robot.step(timeStep) != -1:
     avanzar(6.28)
     for i in range(2):
@@ -69,7 +73,7 @@ while robot.step(timeStep) != -1:
                 avanzar(6.28)
                 if robot.getTime() >= start + 9.91:
                     girar(6.28)
-                    if robot.getTime() >= start + 10.26:
+                    if robot.getTime() >= start + 10.265:
                         avanzar(6.28)
                         if robot.getTime() >= start + 15.2:
                             girar(6.28)
