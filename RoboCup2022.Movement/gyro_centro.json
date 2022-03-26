@@ -1,0 +1,54 @@
+{
+	"Wheel 1": {
+		"dictName": "Wheel 1",
+		"name": "Wheel",
+		"customName": "wheel1",
+		"type": "",
+		"x": 260,
+		"y": 15,
+		"z": 0,
+		"rx": 0,
+		"ry": 0,
+		"rz": -1,
+		"a": 1.57
+	},
+	"Wheel 2": {
+		"dictName": "Wheel 2",
+		"name": "Wheel",
+		"customName": "wheel2",
+		"type": "",
+		"x": -260,
+		"y": 15,
+		"z": 0,
+		"rx": 0,
+		"ry": 0,
+		"rz": -1,
+		"a": 1.57
+	},
+	"gyro": {
+		"dictName": "gyro",
+		"name": "Gyro",
+		"customName": "gyro",
+		"type": "add",
+		"x": 0,
+		"y": 0,
+		"z": 0,
+		"rx": 0,
+		"ry": 1,
+		"rz": 0,
+		"a": 1.55
+	},
+	"Distance Sensor 1": {
+		"dictName": "Distance Sensor 1",
+		"name": "Distance Sensor",
+		"customName": "distance sensor1",
+		"type": "",
+		"x": 0,
+		"y": 355,
+		"z": -309,
+		"rx": 0,
+		"ry": 1,
+		"rz": 0,
+		"a": 1.57
+	}
+}
