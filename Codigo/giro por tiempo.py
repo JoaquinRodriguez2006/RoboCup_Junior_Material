@@ -1,4 +1,3 @@
-# from tracemalloc import start
 from controller import Robot
 from controller import Motor
 from controller import PositionSensor
@@ -13,7 +12,6 @@ speed = 6.28
 media_baldoza = 0.06
 estado = 1
 start = 0
-# start = robot.getTime()
 
 # Distance sensor initialization
 distancia_sensor1 = robot.getDevice("distance sensor1")
@@ -39,29 +37,17 @@ def girar_izq(vel):
     ruedaDerecha.setVelocity(-vel)
 
 while robot.step(timeStep) != -1:
-    print(robot.getTime())
+    
+    # Robot avanza  hasta que encuentra un obstaculo
     if estado == 0:
         avanzar(6.28)
         if distancia_sensor1.getValue() <= media_baldoza:
             avanzar(0)
             start = robot.getTime()
-            print(robot.getTime())
             estado = 1
-
+    # Robot gira 90 grados
     if estado == 1:
         girar(5.96)
         if robot.getTime() >= start + 0.36:
             avanzar(0)
             estado = 0
-
-
-
-    # if estado == 1:
-    #     start = robot.getTime()
-    #     estado = 0
-    # if estado == 0:
-    #     girar_izq(6.28)
-    #     if robot.getTime() >= start + 0.352:
-    #         ruedaIzquierda.setVelocity(0)
-    #         ruedaDerecha.setVelocity(0)
-    #         print("no")
