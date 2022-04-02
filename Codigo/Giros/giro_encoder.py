@@ -45,12 +45,12 @@ def girar_izq(vel):
     ruedaDerecha.setVelocity(-vel)
 
 while robot.step(timeStep) != -1:
-    #print(robot.getTime())
+    # print(robot.getTime())
     if estado == 0:
         avanzar(6.28)
         if distancia_sensor1.getValue() <= media_baldoza:
             avanzar(0)
-            #print(robot.getTime())
+            # print(robot.getTime())
             estado = 1
             start = rDer_encoder.getValue()
 
