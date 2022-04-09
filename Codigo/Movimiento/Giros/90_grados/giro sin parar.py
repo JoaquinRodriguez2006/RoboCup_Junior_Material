@@ -48,6 +48,7 @@ while robot.step(timeStep) != -1:
             start = robot.getTime()
             estado = 1
     
+    # Giro 180 grados
     if estado == 1:
         girito(6.28)
         if robot.getTime() >= start + 0.79:
