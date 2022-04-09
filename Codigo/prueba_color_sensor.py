@@ -116,8 +116,10 @@ while robot.step(timeStep) != -1:
     if floor == 'checkpoint':
         print("Checkpoint")
         avanzar(2)
+        tiempo_anterior = robot.getTime()
         if robot.getTime() >= start + 14:
-            rotar(90)
+            if rotar(90):
+                break
         
     if floor == 'pozo':
         print('Pozo')
