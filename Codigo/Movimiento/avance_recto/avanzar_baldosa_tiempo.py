@@ -34,13 +34,13 @@ def girar_izq(vel):
     ruedaDerecha.setVelocity(-vel)
 
 while robot.step(timeStep) != -1:
-    if estado==1:
+    if estado == 1:
         start = robot.getTime()
         estado = 0
     
     if estado == 0:
         avanzar(6.28)
-        if robot.getTime() > start+0.9:
+        if robot.getTime() > start + 0.93:
             avanzar(0)
             estado = 2
 
