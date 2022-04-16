@@ -26,31 +26,31 @@ rDer_encoder = ruedaDerecha.getPositionSensor()
 rIzq_encoder.enable(timeStep)
 rDer_encoder.enable(timeStep)
 
-# Functions
-def avanzar(vel):
-    ruedaIzquierda.setVelocity(vel)
-    ruedaDerecha.setVelocity(vel)
-
-def girar(vel):
-    ruedaIzquierda.setVelocity(-vel)
-    ruedaDerecha.setVelocity(vel)
-
-def girar_izq(vel):
-    ruedaIzquierda.setVelocity(vel)
-    ruedaDerecha.setVelocity(-vel)
-
-while robot.step(timeStep) != -1:
-    
-    
-    avanzar_media_baldoza()
-    
-    
+def avanzar_baldoza():
+    estado = 0
+    start = 0
     if estado == 0:
         start = rDer_encoder.getValue()
         estado = 1
         
     if estado == 1:
-        avanzar(6.28)
+        ruedaIzquierda.setVelocity(6.28)
+        ruedaDerecha.setVelocity(6.28)
+        if rDer_encoder.getValue() >= start + 5.9:
+            ruedaIzquierda.setVelocity(0)
+            ruedaDerecha.setVelocity(0)
+
+def avanzar_interseccion():
+    estado = 0
+    start = 0
+    if estado == 0:
+        start = rDer_encoder.getValue()
+        estado = 1
+        
+    if estado == 1:
+        ruedaIzquierda.setVelocity(6.28)
+        ruedaDerecha.setVelocity(6.28)
         if rDer_encoder.getValue() >= start + 2.9:
-            avanzar(0)
-            break
+            ruedaIzquierda.setVelocity(0)
+            ruedaDerecha.setVelocity(0)
+
