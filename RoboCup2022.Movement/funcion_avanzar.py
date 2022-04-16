@@ -39,13 +39,33 @@ def girar_izq(vel):
     ruedaIzquierda.setVelocity(vel)
     ruedaDerecha.setVelocity(-vel)
 
+
+def avanzar_baldosa(t_inicial,status=1):
+    global estado
+    global start
+    avanzar(6.28)
+    if rDer_encoder.getValue() >= t_inicial + 5.9:
+            estado = status
+
+def avanzar_media_baldosa(t_inicial,status=1):
+    global estado
+    global start
+    avanzar(6.28)
+    if rDer_encoder.getValue() >= t_inicial + 2.9:
+            estado = status
+
 while robot.step(timeStep) != -1:
     if estado == 0:
         start = rDer_encoder.getValue()
         estado = 1
         
     if estado == 1:
-        avanzar(6.28)
-        if rDer_encoder.getValue() >= start + 2.9:
-            avanzar(0)
-            break
+        avanzar_media_baldosa(start)
+        avanzar_media_baldosa(start+3)
+        avanzar_media_baldosa(start+6)
+        avanzar_media_baldosa(start+9)
+        avanzar_media_baldosa(start+12)
+        avanzar_media_baldosa(start+15,"parar")
+
+    if estado == "parar":
+        avanzar(0)
