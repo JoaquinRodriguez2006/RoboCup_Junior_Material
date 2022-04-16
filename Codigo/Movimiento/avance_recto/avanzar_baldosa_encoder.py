@@ -40,12 +40,17 @@ def girar_izq(vel):
     ruedaDerecha.setVelocity(-vel)
 
 while robot.step(timeStep) != -1:
+    
+    
+    avanzar_media_baldoza()
+    
+    
     if estado == 0:
         start = rDer_encoder.getValue()
         estado = 1
         
     if estado == 1:
         avanzar(6.28)
-        if rDer_encoder.getValue() >= start + 5.9:
+        if rDer_encoder.getValue() >= start + 2.9:
             avanzar(0)
             break
