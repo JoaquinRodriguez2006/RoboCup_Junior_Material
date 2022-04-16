@@ -42,9 +42,6 @@ def girar_izq(vel):
 while robot.step(timeStep) != -1:
     
     
-    avanzar_media_baldoza()
-    
-    
     if estado == 0:
         start = rDer_encoder.getValue()
         estado = 1

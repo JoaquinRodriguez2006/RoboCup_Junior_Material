@@ -24,6 +24,12 @@ ruedaDerecha = robot.getDevice("wheel2 motor")
 ruedaIzquierda.setPosition(float('inf'))
 ruedaDerecha.setPosition(float('inf'))
 
+
+rIzq_encoder = ruedaIzquierda.getPositionSensor()
+rDer_encoder = ruedaDerecha.getPositionSensor()
+
+rIzq_encoder.enable(timeStep)
+rDer_encoder.enable(timeStep)
 # Functions
 
 
@@ -42,8 +48,11 @@ def girar_izq(vel):
     ruedaDerecha.setVelocity(-vel)
 
 
+
+
 gyro = robot.getDevice("gyro")
 gyro.enable(timeStep)
+
 
 def rotar(angulo):
     global angulo_actual
@@ -54,11 +63,13 @@ def rotar(angulo):
     if (abs(angulo - angulo_actual) > 1):
         tiempo_actual = robot.getTime()
         # print("Inicio rotacion angulo", angulo, "Angulo actual:",angulo_actual)
-        tiempo_transcurrido = tiempo_actual - tiempo_anterior  # tiempo que paso en cada timestep
+        tiempo_transcurrido = tiempo_actual - \
+            tiempo_anterior  # tiempo que paso en cada timestep
         # rad/seg * mseg * 1000
         radsIntimestep = abs(gyro.getValues()[1]) * tiempo_transcurrido
         degsIntimestep = radsIntimestep * 180 / math.pi
-        print("rads: " + str(radsIntimestep) + " | degs: " + str(degsIntimestep))
+        print("rads: " + str(radsIntimestep) +
+              " | degs: " + str(degsIntimestep))
         angulo_actual += degsIntimestep
         # Si se pasa de 360 grados se ajusta la rotacion empezando desde 0 grados
         angulo_actual = angulo_actual % 360
@@ -75,21 +86,28 @@ def rotar(angulo):
 
 angulo_actual = 0
 tiempo_anterior = robot.getTime()
-start = robot.getTime()
-estado = 'giro_90_izq'
+start = rDer_encoder.getValue()
+contador = 0
+estado = 'avanzar_diagonal'
 while robot.step(timeStep) != -1:
     if estado == 'giro_90_der':
         girar_der(6.28)
         if robot.getTime() >= start + 0.36:
             start = robot.getTime()
             estado = 'giro_90_izq'
-                
+            print("Finalizando giro 90 derecha")
+
     if estado == 'giro_90_izq':
         girar_izq(6.28)
         if robot.getTime() >= start + 0.36:
             start = robot.getTime()
             estado = 'giro_90_der'
-            
-            
+            print("Finalizando giro 90 izquierda")
+    
+    if estado == "avanzar_diagonal":
+        avanzar(6.28)
+        if rDer_encoder.getValue() >= start + 4.1:
+            estado = "quieto"
 
-      
+    if estado == "quieto":
+        avanzar(0)
