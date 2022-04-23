@@ -83,19 +83,33 @@ def rotar(angulo):
     angulo_actual = 0
     return True
 
+def delay(ms):
+    initTime = robot.getTime()      # Store starting time (in seconds)
+    while robot.step(timeStep) != -1:
+        print("delay")
+        if (robot.getTime() - initTime) * 1000.0 > ms: # If time elapsed (converted into ms) is greater than value passed in
+            break
+
+
+def rotar_45():
+    while robot.step(timeStep) != -1:
+        if rotar(45) == True: # If time elapsed (converted into ms) is greater than value passed in
+            break
 
 angulo_actual = 0
 tiempo_anterior = robot.getTime()
-start = rDer_encoder.getValue()
 contador = 0
-estado = 'avanzar_diagonal'
+estado = 'giro_45_der'
 while robot.step(timeStep) != -1:
-    if estado == 'giro_90_der':
-        girar_der(6.28)
-        if robot.getTime() >= start + 0.36:
-            start = robot.getTime()
-            estado = 'giro_90_izq'
-            print("Finalizando giro 90 derecha")
+    
+    print("Valor del sensor de distancia: " + str(distancia_sensor1.getValue()))
+    print(estado)
+    if estado == 'giro_45_der':
+        if rotar(45) == True:
+            avanzar(0)
+            estado = 'avanzar_diagonal'
+            delay(5000)
+            start = rDer_encoder.getValue()
 
     if estado == 'giro_90_izq':
         girar_izq(6.28)
@@ -106,6 +120,7 @@ while robot.step(timeStep) != -1:
     
     if estado == "avanzar_diagonal":
         avanzar(6.28)
+        print(rDer_encoder.getValue())
         if rDer_encoder.getValue() >= start + 4.1:
             estado = "quieto"
 
