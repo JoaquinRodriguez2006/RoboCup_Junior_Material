@@ -36,6 +36,10 @@ rDer_encoder.enable(timeStep)
 def avanzar(vel):
     ruedaIzquierda.setVelocity(vel)
     ruedaDerecha.setVelocity(vel)
+    
+def retroceder(vel):
+    ruedaIzquierda.setVelocity(-vel)
+    ruedaDerecha.setVelocity(-vel)
 
 
 def girar_der(vel):
@@ -101,19 +105,48 @@ def rotar_enclavado(angulo):
             avanzar(0)
             break
       
-def avanzar_baldoza():
+def avance(tipo_avance):
     start = rDer_encoder.getValue()
+    velocidad = 0
+    avance = 0
+    if tipo_avance == "medio":
+        velocidad = 6.28
+        avance = 2.9
+    elif tipo_avance == "largo":
+        avance = 5.9
+        velocidad = 5.96
+    elif tipo_avance == "esquina":
+        avance = 4.1
+        velocidad = 6.28
     while robot.step(timeStep) != -1:
-        avanzar(6.28)
-        if rDer_encoder.getValue() >= start + 5.9:
+        avanzar(velocidad)
+        if rDer_encoder.getValue() >= start + avance:
             avanzar(0)
             break  
-        
+
+def retroceso(tipo_retroceso):
+    start = rDer_encoder.getValue()
+    velocidad = 0
+    retroceso = 0
+    if tipo_retroceso == "medio":
+        velocidad = 6.28
+        retroceso = 2.9
+    elif tipo_retroceso == "largo":
+        retroceso = 5.9
+        velocidad = 5.96
+    elif tipo_retroceso == "esquina":
+        retroceso = 4.1
+        velocidad = 6.28
+    while robot.step(timeStep) != -1:
+        retroceder(velocidad)
+        if start - retroceso >= rDer_encoder.getValue():
+            avanzar(0)
+            break      
         
 angulo_actual = 0
 tiempo_anterior = robot.getTime()
 contador = 0
 while robot.step(timeStep) != -1:
     
-    rotar_enclavado(-90)
-    avanzar_baldoza()
+    avance("largo")
+    retroceso("largo")
