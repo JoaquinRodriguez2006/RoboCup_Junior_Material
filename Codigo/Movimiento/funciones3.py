@@ -1,3 +1,4 @@
+from pkg_resources import to_filename
 from controller import Robot
 from controller import Motor
 from controller import PositionSensor
@@ -6,9 +7,9 @@ import math
 import time
 
 robot = Robot()
-timeStep = 32
+timeStep = 1
 tile_size = 0.12
-speed = 20
+speed = 6.28
 media_baldoza = 0.06
 estado = 1
 start = 0
@@ -115,9 +116,12 @@ def avance(tipo_avance):
     elif tipo_avance == "largo":
         avance = 5.9
         velocidad = 5.96
+    elif tipo_avance == "S_largo":
+        avance = 30
+        velocidad = 5.96
     elif tipo_avance == "esquina":
-        avance = 4.1
-        velocidad = 6.28
+        avance = 19
+        velocidad = 8
     while robot.step(timeStep) != -1:
         avanzar(velocidad)
         if rDer_encoder.getValue() >= start + avance:
@@ -132,10 +136,10 @@ def retroceso(tipo_retroceso):
         velocidad = 6.28
         retroceso = 2.9
     elif tipo_retroceso == "largo":
-        avance = 5.9
+        retroceso = 5.9
         velocidad = 5.96
     elif tipo_retroceso == "esquina":
-        retroceso = 4.1
+        retroceso = 19
         velocidad = 6.28
     while robot.step(timeStep) != -1:
         retroceder(velocidad)
@@ -146,9 +150,30 @@ def retroceso(tipo_retroceso):
 angulo_actual = 0
 tiempo_anterior = robot.getTime()
 contador = 0
+estado = 0
 while robot.step(timeStep) != -1:
+ if estado == 0:
+
+     rotar_enclavado(90)
+     avance("largo")
+     rotar_enclavado(90)
+     avance("largo")
+     avance("largo")
+     rotar_enclavado(-90)
+     avance("S_largo")
+     rotar_enclavado(-90)
+     avance("largo")
+     rotar_enclavado(-90)
+     avance("largo")
+     rotar_enclavado(90)
+     avance("largo")
+     rotar_enclavado(90)
+     avance("largo")
+     
+
+ estado = 1
+
     
-   rotar_enclavado(360)
- 
+
 
 

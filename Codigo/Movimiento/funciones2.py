@@ -6,9 +6,9 @@ import math
 import time
 
 robot = Robot()
-timeStep = 32
+timeStep = 1
 tile_size = 0.12
-speed = 20
+speed = 6.28
 media_baldoza = 0.06
 estado = 1
 start = 0
@@ -116,7 +116,7 @@ def avance(tipo_avance):
         avance = 5.9
         velocidad = 5.96
     elif tipo_avance == "esquina":
-        avance = 4.1
+        avance = 19
         velocidad = 6.28
     while robot.step(timeStep) != -1:
         avanzar(velocidad)
@@ -135,7 +135,7 @@ def retroceso(tipo_retroceso):
         avance = 5.9
         velocidad = 5.96
     elif tipo_retroceso == "esquina":
-        retroceso = 4.1
+        retroceso = 19
         velocidad = 6.28
     while robot.step(timeStep) != -1:
         retroceder(velocidad)
@@ -148,7 +148,9 @@ tiempo_anterior = robot.getTime()
 contador = 0
 while robot.step(timeStep) != -1:
     
-   rotar_enclavado(360)
- 
+   rotar_enclavado(45)
+   avance("esquina")
+   retroceso("esquina")
+
 
 
