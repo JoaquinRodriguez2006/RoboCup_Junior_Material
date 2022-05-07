@@ -18,6 +18,10 @@ start = 0
 distancia_sensor1 = robot.getDevice("distance sensor1")
 distancia_sensor1.enable(timeStep)
 
+# Step 2: Retrieve the sensor, named "gps", from the robot. Note that the sensor name may differ between robots
+gps = robot.getDevice("gps")
+gps.enable(timeStep)
+
 # Motor initialization
 ruedaIzquierda = robot.getDevice("wheel1 motor")
 ruedaDerecha = robot.getDevice("wheel2 motor")
@@ -109,16 +113,29 @@ def avance(tipo_avance):
     start = rDer_encoder.getValue()
     velocidad = 0
     avance = 0
-    if tipo_avance == "medio":
+    if tipo_avance == "recto":
         velocidad = 6.28
         avance = 2.9
-    elif tipo_avance == "largo":
-        avance = 5.9
-        velocidad = 5.96
     elif tipo_avance == "esquina":
         avance = 4.1
         velocidad = 6.28
     while robot.step(timeStep) != -1:
+        # Sensor de Distancia
+        print("El valor del sensor distancia es: " + str(distancia_sensor1.getValue()))
+        #Sensor de GPS
+        # Step 4: Use the getValues() function to get the sensor readings
+        # Note that the gps returns a list of 3 values for x, y, z, position
+        x = gps.getValues()[0]
+        y = gps.getValues()[1]
+        z = gps.getValues()[2]
+        print("x: " + str(round(x * 100)) + "\t" + " z: " + str(round(z * 100)))
+        print()
+        #Encoders
+        encoder_izq = rIzq_encoder.getValue()
+        encoder_der =  rDer_encoder.getValue()
+        print(f"Valor del encoder izquierdo: {encoder_izq}")
+        print(f"Valor del encoder derecho: {encoder_der}")
+        
         avanzar(velocidad)
         if rDer_encoder.getValue() >= start + avance:
             avanzar(0)
@@ -128,16 +145,20 @@ def retroceso(tipo_retroceso):
     start = rDer_encoder.getValue()
     velocidad = 0
     retroceso = 0
-    if tipo_retroceso == "medio":
+    if tipo_retroceso == "recto":
         velocidad = 6.28
         retroceso = 2.9
-    elif tipo_retroceso == "largo":
-        retroceso = 5.9
-        velocidad = 5.96
     elif tipo_retroceso == "esquina":
         retroceso = 4.1
         velocidad = 6.28
     while robot.step(timeStep) != -1:
+        
+        # Lectura de Sensores
+        #Encoders
+        encoder_izq = rIzq_encoder.getValue()
+        encoder_der = rDer_encoder.getValue()
+        print(f"Valor del encoder izquierdo: {encoder_izq}")
+        print(f"Valor del encoder derecho: {encoder_der}")
         retroceder(velocidad)
         if start - retroceso >= rDer_encoder.getValue():
             avanzar(0)
@@ -146,7 +167,11 @@ def retroceso(tipo_retroceso):
 angulo_actual = 0
 tiempo_anterior = robot.getTime()
 contador = 0
+estado = 0
+
+
 while robot.step(timeStep) != -1:
-    
-    avance("largo")
-    retroceso("largo")
+    retroceso("recto")
+    retroceso("recto")
+    rotar_enclavado(90)
+        
