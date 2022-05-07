@@ -42,6 +42,32 @@ rIzq_encoder.enable(timeStep)
 rDer_encoder.enable(timeStep)
 # Functions
 
+def leer_sensores():
+    # Color sensor
+    color = colour_sensor.getImage()
+    r = colour_sensor.imageGetRed(color, 1, 0, 0)
+    g = colour_sensor.imageGetGreen(color, 1, 0, 0)
+    b = colour_sensor.imageGetBlue(color, 1, 0, 0)
+    print("r: " + str(r) + " g: " + str(g) + " b: " + str(b))
+
+    # Camara
+    image = camera.getImage()
+    imagen = np.frombuffer(image, np.uint8).reshape((camera.getHeight(), camera.getWidth(), 4))
+    frame = cv2.cvtColor(imagen, cv2.COLOR_BGRA2BGR)
+    
+    cv2.imshow("frame", frame)
+    
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # Grayscale
+    cv2.imshow("grayScale", frame)
+    
+    cv2.threshold(frame, 80, 255, cv2.THRESH_BINARY) # Threshold
+    cv2.imshow("thresh", frame)
+    
+    cv2.waitKey(1)
+
+    # Sensor de Distancia
+    print("Distancia: " + str(distancia_sensor1.getValue()))
+
 
 def avanzar(vel):
     ruedaIzquierda.setVelocity(vel)
@@ -111,6 +137,7 @@ def delay(ms):
 
 def rotar_enclavado(angulo):
     while robot.step(timeStep) != -1:
+        leer_sensores()
         if rotar(angulo) == True: # If time elapsed (converted into ms) is greater than value passed in
             avanzar(0)
             break
@@ -130,24 +157,7 @@ def avance(tipo_avance):
         velocidad = 6.28
     while robot.step(timeStep) != -1:
         avanzar(velocidad)
-        color = colour_sensor.getImage()
-        r = colour_sensor.imageGetRed(color, 1, 0, 0)
-        g = colour_sensor.imageGetGreen(color, 1, 0, 0)
-        b = colour_sensor.imageGetBlue(color, 1, 0, 0)
-        print("r: " + str(r) + " g: " + str(g) + " b: " + str(b))
-        image = camera.getImage()
-        imagen = np.frombuffer(image, np.uint8).reshape((camera.getHeight(), camera.getWidth(), 4))
-        frame = cv2.cvtColor(imagen, cv2.COLOR_BGRA2BGR)
-    
-        cv2.imshow("frame", frame)
-    
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # Grayscale
-        cv2.imshow("grayScale", frame)
-    
-        cv2.threshold(frame, 80, 255, cv2.THRESH_BINARY) # Threshold
-        cv2.imshow("thresh", frame)
-    
-        cv2.waitKey(1)
+        leer_sensores()
         if rDer_encoder.getValue() >= start + avance:
             avanzar(0)
             break  
@@ -167,24 +177,7 @@ def retroceso(tipo_retroceso):
         velocidad = 6.28
     while robot.step(timeStep) != -1:
         retroceder(velocidad)
-        color = colour_sensor.getImage()
-        r = colour_sensor.imageGetRed(color, 1, 0, 0)
-        g = colour_sensor.imageGetGreen(color, 1, 0, 0)
-        b = colour_sensor.imageGetBlue(color, 1, 0, 0)
-        print("r: " + str(r) + " g: " + str(g) + " b: " + str(b))
-        image = camera.getImage()
-        imagen = np.frombuffer(image, np.uint8).reshape((camera.getHeight(), camera.getWidth(), 4))
-        frame = cv2.cvtColor(imagen, cv2.COLOR_BGRA2BGR)
-    
-        cv2.imshow("frame", frame)
-    
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # Grayscale
-        cv2.imshow("grayScale", frame)
-    
-        cv2.threshold(frame, 80, 255, cv2.THRESH_BINARY) # Threshold
-        cv2.imshow("thresh", frame)
-    
-        cv2.waitKey(1)
+        leer_sensores()
         if start - retroceso >= rDer_encoder.getValue():
             avanzar(0)
             break      
