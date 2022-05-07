@@ -4,19 +4,29 @@ from controller import PositionSensor
 from controller import Robot, DistanceSensor, GPS, Camera, Receiver, Emitter
 import math
 import time
+import cv2 
+import numpy as np
 
 robot = Robot()
-timeStep = 1
+timeStep = 32
 tile_size = 0.12
 speed = 6.28
 media_baldoza = 0.06
 estado = 1
 start = 0
 # start = robot.getTime()
+timestep = int(robot.getBasicTimeStep())
 
 # Distance sensor initialization
 distancia_sensor1 = robot.getDevice("distance sensor1")
 distancia_sensor1.enable(timeStep)
+#Color Sensor initialization
+colorSensor = robot.getDevice("colour_sensor")
+colorSensor.enable(timestep)
+#Camera initialization
+camera = robot.getDevice("camera3")
+camera.enable(timestep)
+
 
 # Motor initialization
 ruedaIzquierda = robot.getDevice("wheel1 motor")
@@ -101,9 +111,38 @@ def delay(ms):
 
 def rotar_enclavado(angulo):
     while robot.step(timeStep) != -1:
+        leer_sensores()
         if rotar(angulo) == True: # If time elapsed (converted into ms) is greater than value passed in
             avanzar(0)
             break
+
+def leer_sensores():  
+    #el sensor de color
+    image = colorSensor.getImage()
+    r = colorSensor.imageGetRed(image, 1, 0, 0)
+    g = colorSensor.imageGetGreen(image, 1, 0, 0)
+    b = colorSensor.imageGetBlue(image, 1, 0, 0)
+    print("r: " + str(r) + " g: " + str(g) + " b: " + str(b))
+
+    #la camara
+    image = camera.getImage()
+    imagen = np.frombuffer(image, np.uint8).reshape((camera.getHeight(), camera.getWidth(), 4))
+    frame = cv2.cvtColor(imagen, cv2.COLOR_BGRA2BGR)
+
+    cv2.imshow("frame", frame)
+
+    cv2.imshow("frame", frame)
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # Grayscale
+    cv2.imshow("grayScale", frame)
+    cv2.threshold(frame, 80, 255, cv2.THRESH_BINARY) # Threshold
+    cv2.imshow("thresh", frame)
+    cv2.waitKey(1) # Render imshows on screen
+
+    #sensor de distancia
+    print("Distancia: " + str(distancia_sensor1.getValue()))
+
+    
+
       
 def avance(tipo_avance):
     start = rDer_encoder.getValue()
@@ -112,14 +151,13 @@ def avance(tipo_avance):
     if tipo_avance == "medio":
         velocidad = 6.28
         avance = 2.9
-    elif tipo_avance == "largo":
-        avance = 5.9
-        velocidad = 5.96
     elif tipo_avance == "esquina":
-        avance = 19
-        velocidad = 6.28
+         avance = 4.1
+         velocidad = 6.28
     while robot.step(timeStep) != -1:
         avanzar(velocidad)
+        leer_sensores()
+        
         if rDer_encoder.getValue() >= start + avance:
             avanzar(0)
             break  
@@ -131,14 +169,13 @@ def retroceso(tipo_retroceso):
     if tipo_retroceso == "medio":
         velocidad = 6.28
         retroceso = 2.9
-    elif tipo_retroceso == "largo":
-        avance = 5.9
-        velocidad = 5.96
     elif tipo_retroceso == "esquina":
         retroceso = 19
         velocidad = 6.28
     while robot.step(timeStep) != -1:
         retroceder(velocidad)
+        leer_sensores()
+
         if start - retroceso >= rDer_encoder.getValue():
             avanzar(0)
             break      
@@ -147,10 +184,13 @@ angulo_actual = 0
 tiempo_anterior = robot.getTime()
 contador = 0
 while robot.step(timeStep) != -1:
-    
-   rotar_enclavado(45)
-   avance("esquina")
-   retroceso("esquina")
+
+   rotar_enclavado(90)
+   avance("medio")
+   avance("medio")
+   
+   
+   
 
 
 
