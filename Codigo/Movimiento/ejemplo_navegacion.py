@@ -73,6 +73,7 @@ def delay(ms):
 def getColor():
     img = colorSensor.getImage()    # Grab color sensor camera's image view
     # Return grayness of the only pixel (0-255)
+    print("Color: " + str(img[0][0][0]))
     return colorSensor.imageGetGray(img, colorSensor.getWidth(), 0, 0)
 
 

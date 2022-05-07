@@ -6,7 +6,7 @@ import math
 import time
 
 robot = Robot() 
-timeStep = 32
+timeStep = 1
 tile_size = 0.12
 speed = 6.28
 
