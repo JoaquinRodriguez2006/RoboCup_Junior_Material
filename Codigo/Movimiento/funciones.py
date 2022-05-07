@@ -139,7 +139,7 @@ def retroceso(tipo_retroceso):
     while robot.step(timeStep) != -1:
         
         # Lectura de Sensores
-        
+        print("Voy recto hacia atras muy rapidito")
         retroceder(velocidad)
         if start - retroceso >= rDer_encoder.getValue():
             avanzar(0)
