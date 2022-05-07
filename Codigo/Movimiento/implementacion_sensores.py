@@ -2,6 +2,8 @@ from controller import Robot
 from controller import Motor
 from controller import PositionSensor
 from controller import Robot, DistanceSensor, GPS, Camera, Receiver, Emitter
+import cv2
+import numpy as np
 import math
 import time
 
@@ -13,6 +15,10 @@ media_baldoza = 0.06
 estado = 1
 start = 0
 # start = robot.getTime()
+
+# Camera initialization
+camera = robot.getDevice("camera3")
+camera.enable(timeStep)
 
 # Colour sensor initialization
 colour_sensor = robot.getDevice("colour_sensor")
@@ -129,6 +135,19 @@ def avance(tipo_avance):
         g = colour_sensor.imageGetGreen(color, 1, 0, 0)
         b = colour_sensor.imageGetBlue(color, 1, 0, 0)
         print("r: " + str(r) + " g: " + str(g) + " b: " + str(b))
+        image = camera.getImage()
+        imagen = np.frombuffer(image, np.uint8).reshape((camera.getHeight(), camera.getWidth(), 4))
+        frame = cv2.cvtColor(imagen, cv2.COLOR_BGRA2BGR)
+    
+        cv2.imshow("frame", frame)
+    
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # Grayscale
+        cv2.imshow("grayScale", frame)
+    
+        cv2.threshold(frame, 80, 255, cv2.THRESH_BINARY) # Threshold
+        cv2.imshow("thresh", frame)
+    
+        cv2.waitKey(1)
         if rDer_encoder.getValue() >= start + avance:
             avanzar(0)
             break  
@@ -153,6 +172,19 @@ def retroceso(tipo_retroceso):
         g = colour_sensor.imageGetGreen(color, 1, 0, 0)
         b = colour_sensor.imageGetBlue(color, 1, 0, 0)
         print("r: " + str(r) + " g: " + str(g) + " b: " + str(b))
+        image = camera.getImage()
+        imagen = np.frombuffer(image, np.uint8).reshape((camera.getHeight(), camera.getWidth(), 4))
+        frame = cv2.cvtColor(imagen, cv2.COLOR_BGRA2BGR)
+    
+        cv2.imshow("frame", frame)
+    
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # Grayscale
+        cv2.imshow("grayScale", frame)
+    
+        cv2.threshold(frame, 80, 255, cv2.THRESH_BINARY) # Threshold
+        cv2.imshow("thresh", frame)
+    
+        cv2.waitKey(1)
         if start - retroceso >= rDer_encoder.getValue():
             avanzar(0)
             break      
