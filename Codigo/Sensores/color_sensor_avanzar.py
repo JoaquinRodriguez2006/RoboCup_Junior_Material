@@ -4,11 +4,13 @@ from controller import PositionSensor
 from controller import Robot, DistanceSensor, GPS, Camera, Receiver, Emitter
 import math
 import time
+import cv2
+import numpy as np
 
 robot = Robot()
 timeStep = 32
 tile_size = 0.12
-speed = 20
+speed = 6.28
 media_baldoza = 0.06
 estado = 1
 start = 0
@@ -28,6 +30,21 @@ ruedaDerecha = robot.getDevice("wheel2 motor")
 ruedaIzquierda.setPosition(float('inf'))
 ruedaDerecha.setPosition(float('inf'))
 
+colorSensor = robot.getDevice("colour_sensor")
+
+timestep = int(robot.getBasicTimeStep())
+
+# Camera initialization
+camera = robot.getDevice('camera1')
+camera.enable(timeStep)
+camera_der = robot.getDevice("camera2")
+camera_der.enable(timeStep)
+camera_izq = robot.getDevice("camera3")
+camera_izq.enable(timeStep)
+
+
+# Step 3: Enable the sensor, using the timestep as the update rate
+colorSensor.enable(timestep)
 
 rIzq_encoder = ruedaIzquierda.getPositionSensor()
 rDer_encoder = ruedaDerecha.getPositionSensor()
@@ -55,12 +72,8 @@ def girar_izq(vel):
     ruedaIzquierda.setVelocity(vel)
     ruedaDerecha.setVelocity(-vel)
 
-
-
-
 gyro = robot.getDevice("gyro")
 gyro.enable(timeStep)
-
 
 def rotar(angulo):
     global angulo_actual
@@ -102,7 +115,6 @@ def delay(ms):
             avanzar(0)
             break
 
-
 def rotar_enclavado(angulo):
     while robot.step(timeStep) != -1:
         if rotar(angulo) == True: # If time elapsed (converted into ms) is greater than value passed in
@@ -120,11 +132,56 @@ def avance(tipo_avance):
         avance = 4.1
         velocidad = 6.28
     while robot.step(timeStep) != -1:
-        
+        leer_sensores()
         avanzar(velocidad)
         if rDer_encoder.getValue() >= start + avance:
             avanzar(0)
             break  
+
+def leer_sensores():
+    # Sensor de Color
+    getColor()
+    # Camara
+    getCamera()
+    #Encoder
+    getEncoder()
+    # Distancia
+    getDistance()
+
+
+def getColor():
+    image = colorSensor.getImage()
+    r = colorSensor.imageGetRed(image, 1, 0, 0)
+    g = colorSensor.imageGetGreen(image, 1, 0, 0)
+    b = colorSensor.imageGetBlue(image, 1, 0, 0)
+    print("COLOR: Red:", r, "Green:", g, "Blue:", b)
+
+def getCamera():
+    image = colorSensor.getImage()
+    imagen = np.frombuffer(image, np.uint8).reshape((camera.getHeight(), camera.getWidth(), 4))
+    frame = cv2.cvtColor(imagen, cv2.COLOR_BGRA2BGR)
+    cv2.imshow("frame", frame)
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # Grayscale
+    cv2.imshow("grayScale", frame)
+    cv2.threshold(frame, 80, 255, cv2.THRESH_BINARY) # Threshold
+    cv2.imshow("thresh", frame)
+    cv2.waitKey(1)
+
+def getEncoder():
+    encoder_izq = rIzq_encoder.getValue()
+    encoder_der =  rDer_encoder.getValue()
+    print(f"Valor del encoder izquierdo: {encoder_izq}")
+    print(f"Valor del encoder derecho: {encoder_der}")
+
+def getDistance():
+    print("El valor del sensor distancia es: " + str(distancia_sensor1.getValue()))
+
+def gps():
+    x = gps.getValues()[0]
+    y = gps.getValues()[1]
+    z = gps.getValues()[2]
+    print("x: " + str(round(x * 100)) + "\t" + " z: " + str(round(z * 100)))
+    print()
 
 def retroceso(tipo_retroceso):
     start = rDer_encoder.getValue()
@@ -137,10 +194,7 @@ def retroceso(tipo_retroceso):
         retroceso = 4.1
         velocidad = 6.28
     while robot.step(timeStep) != -1:
-        
-        # Lectura de Sensores
-        print("Voy recto hacia atras muy rapidito")
-        retroceder(velocidad)
+        leer_sensores()
         if start - retroceso >= rDer_encoder.getValue():
             avanzar(0)
             break      
@@ -155,4 +209,3 @@ while robot.step(timeStep) != -1:
     retroceso("recto")
     retroceso("recto")
     rotar_enclavado(90)
-        
