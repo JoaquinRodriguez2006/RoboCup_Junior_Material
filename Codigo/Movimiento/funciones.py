@@ -120,21 +120,6 @@ def avance(tipo_avance):
         avance = 4.1
         velocidad = 6.28
     while robot.step(timeStep) != -1:
-        # Sensor de Distancia
-        print("El valor del sensor distancia es: " + str(distancia_sensor1.getValue()))
-        #Sensor de GPS
-        # Step 4: Use the getValues() function to get the sensor readings
-        # Note that the gps returns a list of 3 values for x, y, z, position
-        x = gps.getValues()[0]
-        y = gps.getValues()[1]
-        z = gps.getValues()[2]
-        print("x: " + str(round(x * 100)) + "\t" + " z: " + str(round(z * 100)))
-        print()
-        #Encoders
-        encoder_izq = rIzq_encoder.getValue()
-        encoder_der =  rDer_encoder.getValue()
-        print(f"Valor del encoder izquierdo: {encoder_izq}")
-        print(f"Valor del encoder derecho: {encoder_der}")
         
         avanzar(velocidad)
         if rDer_encoder.getValue() >= start + avance:
@@ -154,11 +139,7 @@ def retroceso(tipo_retroceso):
     while robot.step(timeStep) != -1:
         
         # Lectura de Sensores
-        #Encoders
-        encoder_izq = rIzq_encoder.getValue()
-        encoder_der = rDer_encoder.getValue()
-        print(f"Valor del encoder izquierdo: {encoder_izq}")
-        print(f"Valor del encoder derecho: {encoder_der}")
+        
         retroceder(velocidad)
         if start - retroceso >= rDer_encoder.getValue():
             avanzar(0)
