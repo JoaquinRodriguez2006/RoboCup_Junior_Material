@@ -116,30 +116,31 @@ def rotar_enclavado(angulo):
             avanzar(0)
             break
 
-def leer_sensores():  
-    #el sensor de color
-    image = colorSensor.getImage()
-    r = colorSensor.imageGetRed(image, 1, 0, 0)
-    g = colorSensor.imageGetGreen(image, 1, 0, 0)
-    b = colorSensor.imageGetBlue(image, 1, 0, 0)
-    print("r: " + str(r) + " g: " + str(g) + " b: " + str(b))
+def leer_sensores():
+  def leer_sensor_color(): 
+     #el sensor de color
+     image = colorSensor.getImage()
+     r = colorSensor.imageGetRed(image, 1, 0, 0)
+     g = colorSensor.imageGetGreen(image, 1, 0, 0)
+     b = colorSensor.imageGetBlue(image, 1, 0, 0)
+     print("r: " + str(r) + " g: " + str(g) + " b: " + str(b))
+  def leer_sensor_color(): 
+     #la camara
+     image = camera.getImage()
+     imagen = np.frombuffer(image, np.uint8).reshape((camera.getHeight(), camera.getWidth(), 4))
+     frame = cv2.cvtColor(imagen, cv2.COLOR_BGRA2BGR)
 
-    #la camara
-    image = camera.getImage()
-    imagen = np.frombuffer(image, np.uint8).reshape((camera.getHeight(), camera.getWidth(), 4))
-    frame = cv2.cvtColor(imagen, cv2.COLOR_BGRA2BGR)
+     cv2.imshow("frame", frame)
 
-    cv2.imshow("frame", frame)
-
-    cv2.imshow("frame", frame)
-    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # Grayscale
-    cv2.imshow("grayScale", frame)
-    cv2.threshold(frame, 80, 255, cv2.THRESH_BINARY) # Threshold
-    cv2.imshow("thresh", frame)
-    cv2.waitKey(1) # Render imshows on screen
-
-    #sensor de distancia
-    print("Distancia: " + str(distancia_sensor1.getValue()))
+     cv2.imshow("frame", frame)
+     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # Grayscale
+     cv2.imshow("grayScale", frame)
+     cv2.threshold(frame, 80, 255, cv2.THRESH_BINARY) # Threshold
+     cv2.imshow("thresh", frame)
+     cv2.waitKey(1) # Render imshows on screen
+  def leer_sensor_distancia(): 
+     #sensor de distancia
+     print("Distancia: " + str(distancia_sensor1.getValue()))
 
     
 
