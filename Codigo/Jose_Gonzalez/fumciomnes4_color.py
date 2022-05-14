@@ -201,36 +201,23 @@ def retroceso(tipo_retroceso):
             avanzar(0)
             break      
 
-def corroboracion():
+def tipo_pizza():
+    avance("medio")
     print("valores(1): " + str(r) + " , " + str(b))
+    if r >= 220 and b <= 75 and g <= 75:
+        print("pasaje zona 3 a 1")
+    elif r >= 75 and b <= 207 and g <= 75:
+        print("pasaje zona 2 a 3")
+    elif r >= 75 and b <= 250 and g <= 75:
+        print("pasaje zona 3 a 1")
+    elif r >= 220 and b <= 50 and g <= 190:
+        print("Entered swamp")
+    """""
+    elif r >= 75 and b <= 207 and g <= 75:
+        print("pasaje zona 2 a 3")
+    """""
 
-    if r>=250 and b<=75:
-       retroceso("medio")
-       rotar_enclavado(90)
-       avance("medio")
-       # delay(5)
-       print("valores(2): " + str(r) + " , " + str(b))
 
-       if r>=250 and b<=75:
-           retroceso("medio")
-           rotar_enclavado(90)
-           rotar_enclavado(90)
-           avance("medio")
-           # delay(5)
-           print("valores(3) " + str(r) + " , " + str(b))
-
-           if r>=250 and b<75:
-               retroceso("medio")
-               rotar_enclavado(-90)
-                
-
-    elif r == 34 and b == 34:
-        retroceso("poquito")
-        rotar_enclavado(90)
-        avance("medio")
-
-    else:
-        avance("medio")  
 
 
 
@@ -238,5 +225,5 @@ angulo_actual = 0
 tiempo_anterior = robot.getTime()
 contador = 0
 while robot.step(timeStep) != -1:
-    corroboracion()
+    tipo_pizza()
 
