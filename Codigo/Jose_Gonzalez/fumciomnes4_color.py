@@ -160,13 +160,16 @@ def avance(tipo_avance):
     start = rDer_encoder.getValue()
     velocidad = 0
     avance = 0
-    if tipo_avance == "medio":
-        velocidad = 6.28
+    if tipo_avance == "medio" and tipo_pizza() != "swamp":
+        velocidad = 3
         avance = 2.9
-    elif tipo_avance == "largo":
+    if tipo_avance == "medio" and tipo_pizza() == "swamp":
+        velocidad = 2
+        avance = 2.9
+    elif tipo_avance == "largo" and tipo_pizza() != "swamp":
         avance = 5.9
         velocidad = 5.96
-    elif tipo_avance == "esquina":
+    elif tipo_avance == "esquina" and tipo_pizza() != "swamp":
         avance = 4.1
         velocidad = 6.28
     while robot.step(timeStep) != -1:
@@ -202,21 +205,27 @@ def retroceso(tipo_retroceso):
             break      
 
 def tipo_pizza():
-    avance("medio")
-    print("valores(1): " + str(r) + " , " + str(b))
-    if r >= 220 and b <= 75 and g <= 75:
-        print("pasaje zona 3 a 1")
-    elif r >= 75 and b <= 207 and g <= 75:
-        print("pasaje zona 2 a 3")
-    elif r >= 75 and b <= 250 and g <= 75:
-        print("pasaje zona 3 a 1")
-    elif r >= 220 and b <= 50 and g <= 190:
+    
+    print("valores(1): r:" + str(r) + " , g:" + str(g) + " , b:" + str(b))
+    if r >= 240 and b <= 75 and g <= 75:
+        print("(Red)pasaje zona 3 a 1")
+    elif r >= 110 and b <= 230 and g <= 75:
+        print("(Vaiolet)pasaje zona 2 a 3")
+    elif r <= 75 and b >= 250 and g <= 75:
+        print("(Blue)pasaje zona 1 a 2")
+    elif r >= 200 and b <= 110 and g <= 180:
         print("Entered swamp")
-    """""
-    elif r >= 75 and b <= 207 and g <= 75:
-        print("pasaje zona 2 a 3")
-    """""
-
+        return "swamp"
+    elif r >= 235 and b >= 235 and g >= 235:
+        print("Found Checkpoint")
+    elif r == 233 and b == 233 and g == 233:
+        print("Azulejo normal")
+    elif r <= 50 and b <= 50 and g <= 50:
+        print("un agujero negro we")
+        retroceso("medio")
+        rotar_enclavado(180)
+    else:
+        return "prueba"
 
 
 
@@ -225,5 +234,5 @@ angulo_actual = 0
 tiempo_anterior = robot.getTime()
 contador = 0
 while robot.step(timeStep) != -1:
-    tipo_pizza()
+    avance("medio")
 
