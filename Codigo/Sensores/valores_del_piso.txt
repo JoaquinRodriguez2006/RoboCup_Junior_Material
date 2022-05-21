@@ -1,0 +1,7 @@
+piso_comun: Red: 233 Green: 233 Blue: 233
+piso_rojo:  Red: 252 Green: 65 Blue: 65
+piso_azul: Red: 65 Green: 65 Blue: 252
+piso_morado: Red: 147 Green: 65 Blue: 228
+piso_checkpoint:  Red: 242 Green: 242 Blue: 242
+piso_arena: Red: 212 Green: 179 Blue: 104
+piso_pozo: Red: 42 Green: 42 Blue: 42

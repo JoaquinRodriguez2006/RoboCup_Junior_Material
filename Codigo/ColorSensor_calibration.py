@@ -13,6 +13,6 @@ colorSensor.enable(TimeStep)
 while robot.step(TimeStep) != -1:
     image = colorSensor.getImage()
     r = colorSensor.imageGetRed(image, 1, 0, 0)
-    g = colorSensor.imageGetGreen(image, 0, 1, 0)
-    b = colorSensor.imageGetBlue(image, 0, 0, 1)
+    g = colorSensor.imageGetGreen(image, 1, 0, 0)
+    b = colorSensor.imageGetBlue(image, 1, 0, 0)
     print("Red:",r,"Green:",g,"Blue:",b)
