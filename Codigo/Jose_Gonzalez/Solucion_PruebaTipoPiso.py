@@ -54,10 +54,10 @@ def leer_sensores():
     global g
     global b
     # Color sensor
-    color = colour_sensor.getImage()
-    r = colour_sensor.imageGetRed(color, 1, 0, 0)
-    g = colour_sensor.imageGetGreen(color, 1, 0, 0)
-    b = colour_sensor.imageGetBlue(color, 1, 0, 0)
+    image = colour_sensor.getImage()
+    r = colour_sensor.imageGetRed(image, 1, 0, 0)
+    g = colour_sensor.imageGetGreen(image, 1, 0, 0)
+    b = colour_sensor.imageGetBlue(image, 1, 0, 0)
     # azul: r=65 g=65 b=252
     # rojo: r=252 g=65 b=65
     # print("r: " + str(r) + " g: " + str(g) + " b: " + str(b))
@@ -135,7 +135,7 @@ def rotar(angulo):
         tiempo_anterior = tiempo_actual
         # print("Angulo actual:", angulo_actual)
         return False
-    print("Rotacion finalizada.")
+    #print("Rotacion finalizada.")
     angulo_actual = 0
     return True
 
@@ -160,21 +160,19 @@ def avance(tipo_avance):
     start = rDer_encoder.getValue()
     velocidad = 0
     avance = 0
-    if tipo_avance == "medio" and tipo_pizza() != "swamp":
+    if tipo_avance == "medio":
         velocidad = 3
         avance = 2.9
-    if tipo_avance == "medio" and tipo_pizza() == "swamp":
-        velocidad = 2
-        avance = 2.9
-    elif tipo_avance == "largo" and tipo_pizza() != "swamp":
+    elif tipo_avance == "largo":
         avance = 5.9
         velocidad = 5.96
-    elif tipo_avance == "esquina" and tipo_pizza() != "swamp":
+    elif tipo_avance == "esquina":
         avance = 4.1
         velocidad = 6.28
     while robot.step(timeStep) != -1:
         avanzar(velocidad)
         leer_sensores()
+        tipo_pizza()
         # print("r: " + str(r) + " g: " + str(g) + " b: " + str(b))
         if rDer_encoder.getValue() >= start + avance:
             avanzar(0)
@@ -206,26 +204,27 @@ def retroceso(tipo_retroceso):
 
 def tipo_pizza():
     
-    print("valores(1): r:" + str(r) + " , g:" + str(g) + " , b:" + str(b))
-    if r >= 240 and b <= 75 and g <= 75:
+    #print("valores(1): r:" + str(r) + " , g:" + str(g) + " , b:" + str(b))
+    if 255 >= r >= 240 and 60 <= b <= 75 and 60 <= g <= 75:
         print("(Red)pasaje zona 3 a 1")
-    elif r >= 110 and b <= 230 and g <= 75:
+    elif 150 >= r >= 100 and 210 <= b <= 230 and 60 <= g <= 75:
         print("(Vaiolet)pasaje zona 2 a 3")
-    elif r <= 75 and b >= 250 and g <= 75:
+    elif 60 <= r <= 75 and 255 >= b >= 245 and 60 <= g <= 75:
         print("(Blue)pasaje zona 1 a 2")
-    elif r >= 200 and b <= 110 and g <= 180:
+    elif 200 <= r <= 220 and 110 >= b >= 100 and 175 <= g <= 180:
         print("Entered swamp")
         return "swamp"
-    elif r >= 235 and b >= 235 and g >= 235:
+    elif 250 >= r >= 230 and 250 >= b >= 235 and 250 >= g >= 235:
         print("Found Checkpoint")
     elif r == 233 and b == 233 and g == 233:
         print("Azulejo normal")
-    elif r <= 50 and b <= 50 and g <= 50:
+    elif 30 <= r <= 50 :
         print("un agujero negro we")
         retroceso("medio")
-        rotar_enclavado(180)
+        rotar_enclavado(90)
     else:
         return "prueba"
+
 
 
 
@@ -235,4 +234,3 @@ tiempo_anterior = robot.getTime()
 contador = 0
 while robot.step(timeStep) != -1:
     avance("medio")
-
