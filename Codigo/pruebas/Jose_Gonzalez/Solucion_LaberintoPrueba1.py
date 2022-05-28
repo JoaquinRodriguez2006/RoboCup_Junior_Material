@@ -83,9 +83,11 @@ def leer_sensores():
     X = gps.getValues()[0]
     Y = gps.getValues()[1]
     Z = gps.getValues()[2]
+    
+    print("x: " + str(round(X * 100)) +  "\t" + " z: " + str(round(Z * 100)))
 
     # Use the distance formula to calculate distance to starting position
-    dist = math.sqrt((X-startX)**2 + (Z-startZ)**2 + (Y-startY)**2)
+    #dist = math.sqrt((X-startX)**2 + (Z-startZ)**2 + (Y-startY)**2)
     #print(f"Distance in x axis:{round(dist * 100)}")
 
     """
@@ -235,11 +237,11 @@ tiempo_anterior = robot.getTime()
 contador = 0
 while robot.step(timeStep) != -1:
     print()
-    if not (distancia_sensor1.getValue() < 0.1):
+    if not (distancia_sensor1.getValue() < 0.15):
         avance("medio")
     else:
         avanzar(0)
-        if not (distancia_sensor2.getValue() < 0.1):
+        if not (distancia_sensor2.getValue() < 0.15):
           rotar_enclavado(90)       
         else:
           rotar_enclavado(-90)
