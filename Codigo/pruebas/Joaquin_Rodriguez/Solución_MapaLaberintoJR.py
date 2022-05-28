@@ -7,12 +7,12 @@ import numpy as np
 import math
 import time
 
+# MISCELANOUS THINGS
 robot = Robot()
 timeStep = 32
 tile_size = 0.12
 speed = 6.28
 media_baldoza = 0.06
-estado = 1
 start = 0
 global r
 global g
@@ -21,8 +21,7 @@ r = 0
 g = 0
 b = 0
 
-# start = robot.getTime()
-
+# INITIALIZATIONS
 # Camera initialization
 camera = robot.getDevice("camera3")
 camera.enable(timeStep)
@@ -41,14 +40,13 @@ ruedaDerecha = robot.getDevice("wheel2 motor")
 ruedaIzquierda.setPosition(float('inf'))
 ruedaDerecha.setPosition(float('inf'))
 
-
+# Encoder initialization
 rIzq_encoder = ruedaIzquierda.getPositionSensor()
 rDer_encoder = ruedaDerecha.getPositionSensor()
-
 rIzq_encoder.enable(timeStep)
 rDer_encoder.enable(timeStep)
-# Functions
 
+# FUNCTIONS
 def leer_sensores():
     global r
     global g
@@ -58,28 +56,8 @@ def leer_sensores():
     r = colour_sensor.imageGetRed(color, 1, 0, 0)
     g = colour_sensor.imageGetGreen(color, 1, 0, 0)
     b = colour_sensor.imageGetBlue(color, 1, 0, 0)
-    # azul: r=65 g=65 b=252
-    # rojo: r=252 g=65 b=65
-    # print("r: " + str(r) + " g: " + str(g) + " b: " + str(b))
-"""
-    # Camara
-    image = camera.getImage()
-    imagen = np.frombuffer(image, np.uint8).reshape((camera.getHeight(), camera.getWidth(), 4))
-    frame = cv2.cvtColor(imagen, cv2.COLOR_BGRA2BGR)
-    
-    cv2.imshow("frame", frame)
-    
-    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # Grayscale
-    cv2.imshow("grayScale", frame)
-    
-    cv2.threshold(frame, 80, 255, cv2.THRESH_BINARY) # Threshold
-    cv2.imshow("thresh", frame)
-    
-    cv2.waitKey(1)
-    # Sensor de Distancia
-    print("Distancia: " + str(distancia_sensor1.getValue()))
-    """
-
+    # Distance Sensor
+    distance = distancia_sensor1.getValue()
 
 def avanzar(vel):
     ruedaIzquierda.setVelocity(vel)
@@ -89,18 +67,13 @@ def retroceder(vel):
     ruedaIzquierda.setVelocity(-vel)
     ruedaDerecha.setVelocity(-vel)
 
-
 def girar_der(vel):
     ruedaIzquierda.setVelocity(-vel)
     ruedaDerecha.setVelocity(vel)
 
-
 def girar_izq(vel):
     ruedaIzquierda.setVelocity(vel)
     ruedaDerecha.setVelocity(-vel)
-
-
-
 
 gyro = robot.getDevice("gyro")
 gyro.enable(timeStep)
@@ -146,13 +119,25 @@ def delay(ms):
             avanzar(0)
             break
 
-
 def rotar_enclavado(angulo):
     while robot.step(timeStep) != -1:
         leer_sensores()
         # print("r: " + str(r) + " g: " + str(g) + " b: " + str(b))
         if rotar(angulo) == True: # If time elapsed (converted into ms) is greater than value passed in
             avanzar(0)
+            if distancia_sensor1.getValue() < 0.06:
+                rotar_enclavado(180)
+            break
+
+def rotar_enclavadoLaberinto(angulo):
+    while robot.step(timeStep) != -1:
+        leer_sensores()
+        if rotar(angulo) == True: # If time elapsed (converted into ms) is greater than value passed in
+            if (distancia_sensor1.getValue()) < 0.06:
+                print("Acabo de entrar al 2DO IF")
+                rotar_enclavado(180)
+            else:
+                avanzar(0)
             break
       
 def avance(tipo_avance):
@@ -172,7 +157,7 @@ def avance(tipo_avance):
         avanzar(velocidad)
         leer_sensores()
         # print("r: " + str(r) + " g: " + str(g) + " b: " + str(b))
-        lineas()
+        solución_mapa()
         if rDer_encoder.getValue() >= start + avance:
             avanzar(0)
             break  
@@ -201,38 +186,18 @@ def retroceso(tipo_retroceso):
             avanzar(0)
             break
 
-def lineas():
-    print("r: " + str(r) + " g: " + str(g) + " b: " + str(b))
-    if (r == 233) and (g == 233) and (b == 233):
-        print("It's WHITE")
-    # Red
-    elif (r >= 252) and (60 < g < 69) and (60 < b < 69):
-       print("It's RED")
-    # Blue
-    elif (60 < r < 69) and (60 < g < 69) and (b == 252):
-        print("It's BLUE")
-    # Purple
-    elif (r <= 147) and (60 < g < 69) and (223 < b < 233):
-        print("It's PURPLE")
-    #Checkpoint
-    elif (242 <= r < 255) and (242 <= g <= 255) and (242 <= b <= 255):
-        print("It's CHECKPOINT")
-    # Swamp
-    elif (210 < r < 215) and (176 < g < 183) and (100 < b < 200):
-        print("It's SWAMP")
-    # Black Hole
-    elif (r == 42) and (g == 42) and (b == 42):
-        print("It's A BLACK HOLE")
-        retroceso("medio")
-        rotar_enclavado(180)
-        """rotar_enclavado(180)
+def solución_mapa():
+    print(distancia_sensor1.getValue())
+    if (distancia_sensor1.getValue()) < 0.06:
+        rotar_enclavadoLaberinto(-90)
+    else:
         avanzar(2)
-        if r == 233 and g == 233 and b == 233:
-            avanzar(0)
-            print("WE DONE DID IT")"""
 
+# MAIN CODE
 angulo_actual = 0
 tiempo_anterior = robot.getTime()
-contador = 0
+
+rotar_enclavado(90)
+avance("medio")
 while robot.step(timeStep) != -1:
-    avance("medio")
+    solución_mapa()
