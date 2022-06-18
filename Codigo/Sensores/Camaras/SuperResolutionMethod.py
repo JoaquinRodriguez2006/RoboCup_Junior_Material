@@ -48,12 +48,12 @@ def super_res(image, returndata=False):
     if  returndata:
         return Final_Img
     else:
-        plt.figure(figsize=(91;20,20))
+        plt.figure(figsize=(91,20,20))
         plt.subplot(1,2,1)
-        plt.imshow(image_copy=(91;:,:,::-1))
+        #plt.imshow(image_copy=(91,:,:,::-1))
         plt.title("Bicubic Interpolation")
         plt.axis("off")
-        plt.subplot(1,2,2);plt.imshow(Final_Img=(91;:,:,::-1))
+        #plt.subplot(1,2,2);plt.imshow(Final_Img=(91:,:,::-1))
         plt.title("Super Resolution");plt.axis("off")  
 
 
