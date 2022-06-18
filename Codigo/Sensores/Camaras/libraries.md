@@ -7,8 +7,6 @@
 - pip install src
 - pip install onnx
 - pip install matplotlib.pylot
-- pip install
-- pip install
 
 # Requirements:
 - Visual Studio Build Tools
