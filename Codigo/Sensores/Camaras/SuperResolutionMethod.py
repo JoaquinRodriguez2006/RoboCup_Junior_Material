@@ -16,7 +16,7 @@ def super_res(image, returndata=False):
     # Create a Copy of Image
     img_copy = image.copy()
     # Resize the image into Required Size
-    img_copy = cv2.resize(img_copy, (224,224), cv2.INTER_CUBIC)
+    img_copy = cv2.resize(img_copy, (224), cv2.INTER_CUBIC)
     # Convert image into YcbCr
     image_YCbCr = cv2.cvtColor(img_copy, cv2.COLOR_BGR2YCrCb)
     # Split Y,Cb, and Cr channel 
