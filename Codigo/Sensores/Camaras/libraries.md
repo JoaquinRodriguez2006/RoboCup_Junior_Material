@@ -5,8 +5,6 @@
 - pip install numpy
 - pip install wheel
 - pip install onnx
-- pip install webrtcvad
-- pip install 
 
 # Requirements:
 - Visual Studio Build Tools
