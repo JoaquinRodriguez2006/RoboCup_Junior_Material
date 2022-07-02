@@ -29,7 +29,7 @@ while robot.step(timeStep) != -1:
     avanzar(0)
     img = camera.getImage()
     img = np.array(np.frombuffer(img, np.uint8).reshape((camera.getHeight(), camera.getWidth(), 4)))
-    cv2.imwrite(f"C:/Users/enzzo/OneDrive/Documentos/Github\Sabado-IITA-robotica_2022/RoboCup_Junior_Material/Codigo/Sensores/Camaras/imagenes/imagen_webot_{contador}.png", img)
+    cv2.imwrite(f"C:/Users/iita01/Desktop/RoboCup_Junior_Material/Codigo/pruebas/Jose_Gonzalez/Imagenes_world4/imagen_webot_{contador}.png", img)
     print("Tomo la imagen")
     delay(5000)
     cv2.imshow("Image", img)
