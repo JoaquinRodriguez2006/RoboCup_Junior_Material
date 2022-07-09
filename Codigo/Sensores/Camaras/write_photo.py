@@ -25,16 +25,19 @@ def avanzar(vel):
     ruedaIzquierda.setVelocity(vel)
     ruedaDerecha.setVelocity(vel)
 
-
-time_inicio = robot.getTime()
-while robot.step(timeStep) != -1:
-    avanzar(3)
+def captura_guarda_imagen(contador):
     img = camera.getImage()
     img = np.array(np.frombuffer(img, np.uint8).reshape((camera.getHeight(), camera.getWidth(), 4)))
     cv2.imwrite(f"C:/Users/enzzo/OneDrive/Documentos/Github/Sabado-IITA-robotica_2022/RoboCup_Junior_Material/Codigo/Sensores/Camaras/imagenes_camara_izquierda/imagen_webot_{contador}.png", img)
     print("Tomo la imagen")
     cv2.imshow("Image", img)
     cv2.waitKey(1)
+    
+
+
+time_inicio = robot.getTime()
+while robot.step(timeStep) != -1:
+    captura_guarda_imagen(contador)
     contador += 1
     if(robot.getTime() - time_inicio > 10):
         print("Fin de Capturas")
