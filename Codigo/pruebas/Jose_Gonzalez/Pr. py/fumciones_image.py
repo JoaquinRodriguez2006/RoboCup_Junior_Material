@@ -15,6 +15,7 @@ speed = 6.28
 media_baldoza = 0.06
 estado = 1
 start = 0
+contador = 0
 
 camera = robot.getDevice("camera1")
 camera2 = robot.getDevice("camera2")
@@ -68,6 +69,7 @@ gyro.enable(timeStep)
 def rotar(angulo):
     global angulo_actual
     global tiempo_anterior
+    captar()
     #  iniciar_rotacion
     if angulo > 0:
         girar_der(0.5)
@@ -117,10 +119,10 @@ def avance(tipo_avance):
     start = rDer_encoder.getValue()
     velocidad = 0
     avance = 0
+    captar()
     if tipo_avance == "medio":
         avance = 5.9
         velocidad = 5.96
-        captar()
     elif tipo_avance == "S_largo":
         avance = 30
         velocidad = 5.96
@@ -137,10 +139,10 @@ def retroceso(tipo_retroceso):
     start = rDer_encoder.getValue()
     velocidad = 0
     retroceso = 0
+    captar()
     if tipo_retroceso == "medio":
         retroceso = 5.9
         velocidad = 5.96
-        captar()
     elif tipo_retroceso == "esquina":
         retroceso = 19
         velocidad = 6.28
@@ -152,27 +154,25 @@ def retroceso(tipo_retroceso):
         
 angulo_actual = 0
 tiempo_anterior = robot.getTime()
-contador = 0
 estado = 0
-def captar():
-    contador = 0
+def captar(contador):
     while robot.step(timeStep) != -1:
       avanzar(0)
       img = camera.getImage()
       img2 = camera2.getImage()
       img3 = camera3.getImage()
       img = np.array(np.frombuffer(img, np.uint8).reshape((camera.getHeight(), camera.getWidth(), 4)))
-      img2 = np.array(np.frombuffer(img, np.uint8).reshape((camera.getHeight(), camera.getWidth(), 4)))
-      img3 = np.array(np.frombuffer(img, np.uint8).reshape((camera.getHeight(), camera.getWidth(), 4)))
+      img2 = np.array(np.frombuffer(img2, np.uint8).reshape((camera2.getHeight(), camera2.getWidth(), 4)))
+      img3 = np.array(np.frombuffer(img3, np.uint8).reshape((camera3.getHeight(), camera3.getWidth(), 4)))
       cv2.imwrite(f"C:/Users/iita01/Desktop/RoboCup_Junior_Material/Codigo/pruebas/Jose_Gonzalez/imagenes_webots/world3_movimiento/imagen_webot_{contador}.png", img)
       cv2.imwrite(f"C:/Users/iita01/Desktop/RoboCup_Junior_Material/Codigo/pruebas/Jose_Gonzalez/imagenes_webots/world3_movimiento/imagen_webot_{contador}.png", img2)
       cv2.imwrite(f"C:/Users/iita01/Desktop/RoboCup_Junior_Material/Codigo/pruebas/Jose_Gonzalez/imagenes_webots/world3_movimiento/imagen_webot_{contador}.png", img3)
       print("Tomo la imagen")
-      delay(1000)
       cv2.imshow("Image", img)
       cv2.imshow("Image", img2)
       cv2.imshow("Image", img3)
       cv2.waitKey(1)
+      #global contador
       contador += 1
       break
 
